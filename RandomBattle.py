@@ -12,7 +12,7 @@ opponent=RandomPlayer(battle_format="gen6randombattle")
 FinalEnvironment=SingleAgentWrapper(RandomBattle,opponent)
 PPOAgent = PPO("MlpPolicy", FinalEnvironment, verbose=1)
 PPOAgent.learn(total_timesteps=100000)  
-#Save the Policy DATA into a file  
+#Save the Policy DATA into the data file
 PPOAgent.save("PPO_AGENT_DATA")    
 FinalEnvironment.close()
 

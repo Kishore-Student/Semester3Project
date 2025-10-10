@@ -9,7 +9,7 @@ class BaseEnv(SinglesEnv):  ## Creating base environment to wrap showdown observ
         """setting strict = false to prevent environment from crashing when there is an abnormal input
         and to fall to default behaviour instead"""  
           
-        ## 10-dimensional observation space 
+        ## 10-dimensional observation space
         ## SETTING BOUNDS FOR OBSERVATION SPACE 
         self.observation_spaces = {  
             agent: Box(  
