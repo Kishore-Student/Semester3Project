@@ -9,12 +9,12 @@ class BaseEnv(SinglesEnv):  ## Creating base environment to wrap showdown observ
         """setting strict = false to prevent environment from crashing when there is an abnormal input
         and to fall to default behaviour instead"""  
           
-        ## 10-dimensional observation space
+        ## 14-dimensional observation space
         ## SETTING BOUNDS FOR OBSERVATION SPACE 
         self.observation_spaces = {  
             agent: Box(  
-                np.array([-1, -1, -1, -1, 0, 0, 0, 0, 0, 0], dtype=np.float32),  
-                np.array([3, 3, 3, 3, 4, 4, 4, 4, 1, 1], dtype=np.float32),  
+                np.array([-1, -1, -1, -1, 0, 0, 0, 0, 0, 0,0,0,0,0], dtype=np.float32),  
+                np.array([3, 3, 3, 3, 4, 4, 4, 4, 1, 1,1,1,1,1], dtype=np.float32),  
                 dtype=np.float32,  
             )  
             for agent in self.possible_agents  
@@ -30,19 +30,22 @@ class BaseEnv(SinglesEnv):  ## Creating base environment to wrap showdown observ
          move.
          
          The next value specifies the fraction of Pokemon fainted in agent's 
-         side, and the last value specifies the fraction of Pokemon fainted in
+         side, and the next value specifies the fraction of Pokemon fainted in
          the opponent's side.
+
+         The next 2 values specifies the health percentage of agent's on field pokemon and opponent's on field pokemon
+
+         Finally the last 2 values if agent and opponent can use special gimmick "mega-evolution" = 1 or not = 0
          """ 
     ## Override calc_reward function
     #Reward and penalty function for enabling critic policy to judge
     def calc_reward(self, battle: AbstractBattle) -> float:  
-        return self.reward_computing_helper(  
-            battle,   
-            fainted_value=5.0,   #Setting reward for fainting opponent's pokemon to 5
-            hp_value=1.0,        #Setting reward for reducing opponent's health to 1 per 1%
-            victory_value=50.0   #Setting reward for winning the match to 50
-        )  
-   # The penalties for losing pokemon, health and battle are symmetric (i.e:-5,-1,-50 respectively).
+         return self.reward_computing_helper(  
+             battle,   
+             fainted_value=5.0,   #Setting reward for fainting opponent's pokemon to 5
+             hp_value=1.0,        #Setting reward for reducing opponent's health to 1 per 1%
+             victory_value=50.0   #Setting reward for winning the match to 50
+         )  
     
     def embed_battle(self, battle: AbstractBattle) -> np.ndarray:  # This function returns an array
         # Initialize with default values  
@@ -60,19 +63,31 @@ class BaseEnv(SinglesEnv):  ## Creating base environment to wrap showdown observ
           
         ## Set the  ratio of Pokemon fainted initially on both sides (n/6)
         fainted_self = 0.0  
-        fainted_opponent = 0.0  
+        fainted_opponent = 0.0
+        health_self=1.0
+        health_opponent=1.0
+        can_mega_self=0.0
+        can_mega_opponent=0.0  
          #Update the values  
         if battle.team:  
             fainted_self = len([Pokemon for Pokemon in battle.team.values() if Pokemon.fainted]) / 6.0  
-          
+            health_self= battle.active_pokemon.current_hp_fraction
+            can_mega_self=1.0 if battle.can_mega_evolve else 0.0
+
+
         if battle.opponent_team:  
             fainted_opponent = len([Pokemon for Pokemon in battle.opponent_team.values() if Pokemon.fainted]) / 6.0  
-          
+            health_opponent=battle.opponent_active_pokemon.current_hp_fraction
+            can_mega_opponent=0.0 if not battle.opponent_used_mega_evolve else 1.0
+
+            
         # Combine into final Observation vector  
         Observation = np.concatenate([  
             move_base_dmg,  
             move_dmg_multiplier,  
-            [fainted_self, fainted_opponent],  
+            [fainted_self, fainted_opponent],
+            [health_self,health_opponent],
+            [can_mega_self,can_mega_opponent]  
         ])  
           
         ## Replacing invalid observations  
