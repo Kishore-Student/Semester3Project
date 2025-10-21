@@ -8,6 +8,7 @@ from stable_baselines3.common.monitor import Monitor
 import matplotlib.pylab as plt
 import time
 import pandas as pd
+
 ConnectAndOpen() ## Connect to the server and then open the default browser to run the server on
 time.sleep(10)
 agent="RL_AGENT_PPO" 
@@ -17,12 +18,7 @@ environment=SingleAgentWrapper(RandomBattle,opponent)
 FinalEnvironment=Monitor(environment,"Training_logs")
 PPOAgent = PPO("MlpPolicy",         ## Creation of the PPO Agent as an object
                 FinalEnvironment,
-                # learning_rate=0.0005,   ##Setting learning rate to 0.05% instead of base 0.03% to enable more adaptability 
                 verbose=1,
-                # gamma = 0.98,
-                # normalize_advantage=True,
-                # batch_size=258, ## Update the policy after every 258 cycles (1 cycle = current observations+ choosing moves in current iteration and iterating to next iteration)
-                # n_steps=2580
             ) 
 PPOAgent.learn(total_timesteps=8000)   ## Environment allows n observations and moves per run
 #Save the Policy DATA into the data file
