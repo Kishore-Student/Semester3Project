@@ -58,10 +58,10 @@ def ConnectAndOpen():
 
     if StartServer("localhost", 8000):
         print(f"Server started with PID {Serverstart.pid} on localhost:8000")
-        time.sleep(5) ## Give time for server to start properly
+        time.sleep(10) ## Give time for server to start properly and open browser
         webbrowser.open_new_tab("http://localhost:8000")
         print("Opening browser...")
-        time.sleep(5) ## Let the browser be opened completely
+
     else:
         print("Server timed out. Terminating process...")
         Serverstart.terminate()

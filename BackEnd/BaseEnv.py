@@ -72,14 +72,12 @@ class BaseEnv(SinglesEnv):  ## Creating base environment to wrap showdown observ
         if battle.team:  
             fainted_self = len([Pokemon for Pokemon in battle.team.values() if Pokemon.fainted]) / 6.0  
             health_self= battle.active_pokemon.current_hp_fraction
-            can_mega_self=1.0 if battle.can_mega_evolve else 0.0
-
+            can_mega_self = 1.0 if battle.can_mega_evolve else 0.0  ## Check if agent can mega evolve
 
         if battle.opponent_team:  
             fainted_opponent = len([Pokemon for Pokemon in battle.opponent_team.values() if Pokemon.fainted]) / 6.0  
             health_opponent=battle.opponent_active_pokemon.current_hp_fraction
-            can_mega_opponent=0.0 if not battle.opponent_used_mega_evolve else 1.0
-
+            can_mega_opponent = 1.0 if not battle.opponent_used_mega_evolve else 0.0 ## Check if opponent can mega evolve
             
         # Combine into final Observation vector  
         Observation = np.concatenate([  

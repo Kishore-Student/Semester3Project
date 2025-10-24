@@ -7,6 +7,7 @@ import pandas as pd
 from stable_baselines3 import PPO
 from ServerStart import ConnectAndOpen 
 import matplotlib.pyplot as plt
+import os
 ConnectAndOpen()
 print("Please enter your user name as HumanPlayer_gen6 in browser")
 time.sleep(15)
@@ -83,7 +84,7 @@ class PPOPlayer(Player):
 async def main():  
     # Load the trained agent  
     agent = PPOPlayer(  
-        model_path="PPO_AGENT_DATA",  # Path to the saved model  
+        model_path="../AgentDATA/PPO_AGENT_DATA",  # Path to the saved model
         account_configuration=AccountConfiguration("MyPPOBot", None),  
         server_configuration=LocalhostServerConfiguration,  
         battle_format="gen6randombattle"  
@@ -102,9 +103,10 @@ async def main():
     print("All battles completed successfully")  
 
 #_______________________________________________________________________________________________________________________________________________________________    
+    os.makedirs("../Logs", exist_ok=True) ## Create a directory if it doesn't exist
     ## Log data into the log file
     try:
-        df=pd.read_csv("WinRateVSHuman.csv")
+        df=pd.read_csv("Logs/WinRateVSHuman.csv")
     except FileNotFoundError:
         print("File doesn't exist\n Creating a new log file")
         df = pd.DataFrame(columns=["Battle_no","win_rate"])
@@ -116,7 +118,7 @@ async def main():
         total_wins=(df["win_rate"].iloc[-1]*(len(df))/100 if len(df)>0 else 0)+(1 if match<wins_in_current_cycle else 0) ## Calculate the number of battles played till now
         win_rate=(total_wins/old_battles) * 100 ## Finding winrate using total wins/total battles * 100
     df.loc[len(df)] = [old_battles, win_rate]
-    df.to_csv("WinRateVSHuman.csv",index=False)
+    df.to_csv("Logs/WinRateVSHuman.csv",index=False)
     ## Save data into WinRateVSHuman.csv
 
 #__________________________________________________________________________________________________________________________________________________________________
@@ -128,7 +130,7 @@ async def main():
     plt.ylabel("Overall Win Rate (%)")
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig("WinRateProgress.png", dpi=300)
+    plt.savefig("../Plots/WinRateProgress.png", dpi=300)
     plt.close()
 if __name__ == "__main__":  
     asyncio.run(main())
