@@ -14,7 +14,7 @@ import os
 def TestVSHuman():
     ConnectAndOpen()
     print("Please enter your user name as HumanPlayer_gen6 in browser")
-    time.sleep(15)
+    time.sleep(20)
     class PPOPlayer(Player):  
         def __init__(self, model_path, **kwargs):  
             super().__init__(**kwargs)  
@@ -70,26 +70,39 @@ def TestVSHuman():
             ])  
             
             return np.nan_to_num(Observation, nan=0.0)  
-        
-        def action_to_order(self, action, battle):  
-            # Convert action index to battle order    
-            if action < 6:  # Switch action  
-                available_switches = [p for p in battle.team.values() if not p.fainted and p != battle.active_pokemon]  
-                if action < len(available_switches):  
-                    return self.create_order(available_switches[action])  
-            else:  # Move action  
+
+        def action_to_order(self, action, battle):    
+    # Convert action index to battle order      
+            if action < 6:  # Switch action    
+                available_switches = [p for p in battle.team.values() if not p.fainted and p != battle.active_pokemon]    
+                if action < len(available_switches):    
+                    return self.create_order(available_switches[action])    
+            else:  # Move action    
+                # Decode the action: 6-9 = normal moves, 10-13 = mega moves  
                 move_idx = (action - 6) % 4  
+                should_mega = 10 <= action < 14  # Actions 10-13 are mega moves  
+                
                 if move_idx < len(battle.available_moves):  
-                    return self.create_order(battle.available_moves[move_idx])  
+                    return self.create_order(  
+                        battle.available_moves[move_idx],  
+                        mega=should_mega and battle.can_mega_evolve  # Only mega if available  
+                    )  
             
-            # Default to random move if action is invalid  
+            # Default to random move if action is invalid    
             return self.choose_random_move(battle)  
+        
+        def generate_unique_name(base_name):
+            """Generate a unique name ≤20 chars using timestamp suffix."""
+            suffix = str(int(time.time()))[-6:]  # last 6 digits of timestamp
+            name = f"{base_name}{suffix}"[:20]
+            return name
     
-    async def main():  
+    async def main():
+        MyPPOBot=PPOPlayer.generate_unique_name("PPOBOT")  
         # Load the trained agent  
         agent = PPOPlayer(  
             model_path="./AgentDATA/PPO_AGENT_DATA",  # Path to the saved model
-            account_configuration=AccountConfiguration("MyPPOBot", None),  
+            account_configuration=AccountConfiguration(MyPPOBot, None),  
             server_configuration=LocalhostServerConfiguration,  
             battle_format="gen6randombattle"  
         )  
