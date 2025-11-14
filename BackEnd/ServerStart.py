@@ -8,18 +8,18 @@ import webbrowser
 import atexit
 _server_process = None
 
-def is_server_running(host="localhost", port=8000, timeout=1):
+def is_server_running(host="localhost", port=8000, timeout=1): ## Function to check if server is running
     try:
         with socket.create_connection((host, port), timeout=timeout):
-            return True
+            return True             ## Return true and establish connection if server is listening
     except OSError:
         return False
 
 def kill_process_using_port(port):
     """Kill any process using the specified port."""
     try:
-        if platform.system() == "Windows":
-            result = subprocess.check_output(f'netstat -ano | findstr :{port}', shell=True).decode()
+        if platform.system() == "Windows":  
+            result = subprocess.check_output(f'netstat -ano | findstr :{port}', shell=True).decode()  ## Creating subprocess to run in background and check if server is running
             for line in result.strip().split("\n"):
                 if "LISTENING" in line:
                     pid = int(line.strip().split()[-1])
@@ -28,7 +28,7 @@ def kill_process_using_port(port):
             result = subprocess.check_output(["lsof", "-ti", f":{port}"]).decode().strip()
             if result:
                 for pid in result.split("\n"):
-                    os.kill(int(pid), signal.SIGKILL)
+                    os.kill(int(pid), signal.SIGKILL)   ## Kill the server/ process if it is running using port number
     except subprocess.CalledProcessError:
         pass
 
