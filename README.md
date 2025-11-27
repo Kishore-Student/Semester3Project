@@ -37,7 +37,13 @@ Run the GUI to start and monitor training:
 ```bash
 python Ui.py
 ```
-## References
+## Third-Party Libraries
 
-- [PokeEnv Documentation](https://poke-env.readthedocs.io/en/stable/) – Official docs for PokeEnv.
-- [Stable-Baselines3 Documentation](https://stable-baselines3.readthedocs.io/en/master/) – Official docs for SB3.
+This project uses the following third-party libraries, which are subject to their own licenses:
+
+- **PokeEnv** – MIT License ([Documentation](https://poke-env.readthedocs.io/en/stable/))
+- **Stable-Baselines3 (SB3)** – MIT License ([Documentation](https://stable-baselines3.readthedocs.io/en/master/))
+- **PySide6** – LGPL License ([Documentation](https://doc.qt.io/qtforpython/))
+
+The use of this software must comply with the licenses of these libraries.
+
