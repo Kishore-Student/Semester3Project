@@ -26,7 +26,7 @@ def generate_unique_name(base_name):    ## Function to generate unique names to 
 def trainAgent():
     # Ensure server is running
     ConnectAndOpen()
-    time.sleep(15)  # give Node some time
+    time.sleep(20)  # give Node some time
     print("Server runs at local host 8000, check using the link http://localhost:8000")
     # Generate unique names
     agent_name_ppo = generate_unique_name("PPOAgent")

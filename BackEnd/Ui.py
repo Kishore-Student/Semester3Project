@@ -1,5 +1,4 @@
 ## Importing the modules for the UI
-
 import sys
 import os
 import io
