@@ -45,5 +45,15 @@ This project uses the following third-party libraries, which are subject to thei
 - **Stable-Baselines3 (SB3)** – MIT License ([Documentation](https://stable-baselines3.readthedocs.io/en/master/))
 - **PySide6** – LGPL License ([Documentation](https://doc.qt.io/qtforpython/))
 
-The use of this software must comply with the licenses of these libraries.
 
+## Contributors
+
+| Name       | GitHub Profile | Contributions |
+|------------|----------------|---------------|
+| Kishore    | [Kishore-Student](https://github.com/Kishore-Student) | RL agent setup and coding; project environment setup; UI design; plotting; logging |
+| Manjunath  | [Manjunathar415](https://github.com/Manjunathar415) | UI design; documentation |
+
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
